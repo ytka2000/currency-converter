@@ -1,20 +1,18 @@
-import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 
 const copyright = `© Copyright ${new Date().getFullYear()}.`;
 const rights = "All rights reserved.";
 
 const Footer = () => (
-  <Container
+  <Grid
+    container
     component="footer"
-    maxWidth="xl"
-    align="center"
     sx={{
-      mt: 4,
-
+      mt: 5,
       backgroundColor: "primary.light",
-      position: "fixed",
-      bottom: 0,
+      justifyContent: "center",
+      alignItems: "center",
     }}
   >
     <Typography
@@ -22,7 +20,8 @@ const Footer = () => (
       color="primary.dark"
       sx={{ py: 2, display: { es: "none", xs: "block" } }}
     >
-      {`${copyright} ${rights}`}
+      {copyright}
+      {rights}
     </Typography>
     <Typography
       variant="caption"
@@ -30,8 +29,10 @@ const Footer = () => (
       sx={{ py: 1, display: { es: "block", xs: "none" } }}
     >
       {copyright}
+      <br />
+      {rights}
     </Typography>
-  </Container>
+  </Grid>
 );
 
 export default Footer;

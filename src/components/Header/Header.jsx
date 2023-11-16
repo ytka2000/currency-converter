@@ -5,7 +5,7 @@ import Container from "@mui/material/Container";
 import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
 
 const Header = () => (
-  <AppBar position="static">
+  <AppBar position="static" sx={{ justifyContent: "center", mb: 3 }}>
     <Container maxWidth="xl" sx={{ ml: 0 }}>
       <Toolbar disableGutters>
         <CurrencyExchangeIcon sx={{ mr: 2 }} />
