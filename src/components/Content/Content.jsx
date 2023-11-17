@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import useSWR from "swr";
 
 import { fetcher } from "../../utils/fetcher";
@@ -16,6 +16,16 @@ const Content = () => {
     console.log("data", data);
   }, [data]);
 
+  const currentComponent = useMemo(() => {
+    if (isLoading) {
+      return <Loader />;
+    } else if (data) {
+      return "data";
+    } else {
+      return <Error error={error?.message} />;
+    }
+  }, [data, error, isLoading]);
+
   return (
     <Container
       sx={{
@@ -24,9 +34,7 @@ const Content = () => {
         justifyContent: "center",
       }}
     >
-      {isLoading ? <Loader /> : null}
-      {error ? <Error error={error.message} /> : null}
-      {data ? "data" : null}
+      {currentComponent}
     </Container>
   );
 };
