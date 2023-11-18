@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 
 import theme from "../../theme";
 import Header from "../Header";
-import Content from "../Content";
+import Body from "../Body";
 import Footer from "../Footer";
 
 const App = () => {
@@ -17,7 +17,7 @@ const App = () => {
         }}
       >
         <Header />
-        <Content />
+        <Body />
         <Footer />
       </Box>
     </ThemeProvider>

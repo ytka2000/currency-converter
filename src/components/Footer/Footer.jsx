@@ -20,8 +20,7 @@ const Footer = () => (
       color="primary.dark"
       sx={{ py: 2, display: { es: "none", xs: "block" } }}
     >
-      {copyright}
-      {rights}
+      {`${copyright} ${rights}`}
     </Typography>
     <Typography
       variant="caption"
