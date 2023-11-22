@@ -1,41 +1,70 @@
+import { useState } from "react";
+import { useStore } from "../../store";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { styled } from "@mui/material/styles";
+
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-function createData(ccy, base_ccy, buy, sale) {
-  return { ccy, base_ccy, buy, sale };
-}
+import DataTableInput from "../DataTableInput";
 
-const rows = [
-  createData("PLZ", "UAH", "8.65850", "8.65850"),
-  createData("SEK", "UAH", "3.31180", "3.31180"),
-];
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.primary.body,
+    color: theme.palette.primary.dark,
+    fontWeight: 700,
+    fontSize: 18,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 18,
+  },
+}));
 
 const DataTable = () => {
+  const matches = useMediaQuery("(max-width:1100px)");
+
+  const data = useStore((state) => state.currencies);
+
+  const [globalEditMode, setGlobalEditMode] = useState(false);
+
   return (
-    <Paper sx={{ width: "75%", overflow: "hidden" }}>
-      <TableContainer sx={{ maxHeight: 430 }}>
+    <Paper sx={{ width: matches ? "100%" : "75%", overflow: "hidden" }}>
+      <TableContainer sx={{ maxHeight: 390 }}>
         <Table stickyHeader aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell></TableCell>
-              <TableCell>Buy</TableCell>
-              <TableCell>Sell</TableCell>
+              <StyledTableCell>Currency Pair</StyledTableCell>
+              <StyledTableCell align="right">Buy</StyledTableCell>
+              <StyledTableCell align="right">Sell</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {data.map((item) => (
               <TableRow
-                key={row.ccy}
+                key={item.ccy}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
-                <TableCell>{row.ccy}</TableCell>
-                <TableCell>{row.buy}</TableCell>
-                <TableCell>{row.sale}</TableCell>
+                <StyledTableCell
+                  sx={{
+                    backgroundColor: "primary.light",
+                    color: "primary.dark",
+                  }}
+                >{`${item.ccy}/${item.base_ccy}`}</StyledTableCell>
+                <DataTableInput
+                  defaultValue={item.buy}
+                  globalEditMode={globalEditMode}
+                  setGlobalEditMode={setGlobalEditMode}
+                />
+                <DataTableInput
+                  defaultValue={item.sale}
+                  globalEditMode={globalEditMode}
+                  setGlobalEditMode={setGlobalEditMode}
+                />
               </TableRow>
             ))}
           </TableBody>

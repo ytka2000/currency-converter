@@ -1,25 +1,9 @@
-import { useState } from "react";
+import useNumberInput from "../../hooks/useNumberInput";
 
 import TextField from "@mui/material/TextField";
 
 const ConverterInput = ({ label, defaultValue }) => {
-  const [value, setValue] = useState(defaultValue || "");
-
-  const handleChange = (e) => {
-    const newValue = e.target.value;
-
-    if (newValue.match(`(^$)|(^[1-9]([0-9]*)(\\.?[0-9]{0,2})$)`)) {
-      setValue(newValue);
-    }
-  };
-
-  const handleBlur = (e) => {
-    const newValue = e.target.value;
-
-    if (newValue.endsWith(".")) {
-      setValue(newValue.substring(0, newValue.length - 1));
-    }
-  };
+  const [value, setValue, { onBlur }] = useNumberInput(defaultValue || "");
 
   return (
     <TextField
@@ -29,8 +13,8 @@ const ConverterInput = ({ label, defaultValue }) => {
         shrink: true,
       }}
       value={value}
-      onChange={handleChange}
-      onBlur={handleBlur}
+      onChange={(e) => setValue(e.target.value)}
+      onBlur={onBlur}
     />
   );
 };

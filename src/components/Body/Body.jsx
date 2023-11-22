@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import useSWR from "swr";
 
+import { useStore } from "../../store";
 import { fetcher } from "../../utils/fetcher";
 
 import Container from "@mui/material/Container";
@@ -12,10 +13,13 @@ const ENDPOINT = "https://api.privatbank.ua/p24api/pubinfo";
 
 const Body = () => {
   const { data, error, isLoading } = useSWR(ENDPOINT, fetcher);
+  const setApiData = useStore((state) => state.setApiCurrencies);
 
   useEffect(() => {
-    console.log("data", data);
-  }, [data]);
+    if (data) {
+      setApiData(data);
+    }
+  }, [data, setApiData]);
 
   const currentComponent = useMemo(() => {
     if (isLoading) {
