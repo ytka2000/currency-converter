@@ -13,6 +13,7 @@ const DataTableCell = ({
   defaultValue: defValue,
   globalEditMode,
   setGlobalEditMode,
+  setRate,
 }) => {
   const defaultValue = useMemo(() => Number(defValue).toFixed(2), [defValue]);
 
@@ -32,6 +33,7 @@ const DataTableCell = ({
 
   const handleSaveClick = () => {
     cellValue.current = value;
+    setRate(value);
     setEditMode(false);
     setGlobalEditMode(false);
   };

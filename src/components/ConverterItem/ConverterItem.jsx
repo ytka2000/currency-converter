@@ -1,16 +1,60 @@
-import Box from "@mui/material/Box";
-import ConverterInput from "../ConverterInput";
-import ConverterDropdown from "../ConverterDropdown";
+import { validateNumberInput } from "../../utils";
 
-const ConverterItem = ({ label, defaultValue }) => {
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Autocomplete from "@mui/material/Autocomplete";
+
+const ConverterItem = ({
+  label,
+  id,
+  data,
+  options,
+  onInputChange,
+  onDropdownSelect,
+}) => {
+  const handleInputChange = (e) => {
+    const newValue = e.target.value;
+
+    if (validateNumberInput(newValue)) {
+      onInputChange(newValue, id);
+    }
+  };
+
+  const handleDropdownSelect = (_, newValue) => {
+    onDropdownSelect(newValue, id);
+  };
+
+  const handleBlur = (e) => {
+    const newValue = e.target.value;
+
+    if (newValue.endsWith(".")) {
+      onInputChange(newValue.substring(0, newValue.length - 1), id);
+    }
+  };
+
   return (
     <Box
       component="form"
       display="flex"
       sx={{ justifyContent: "center", gap: "10px" }}
     >
-      <ConverterInput label={label} defaultValue={defaultValue} />
-      <ConverterDropdown />
+      <TextField
+        label={label}
+        value={data.value}
+        variant="outlined"
+        InputLabelProps={{
+          shrink: true,
+        }}
+        onChange={handleInputChange}
+        onBlur={handleBlur}
+      />
+      <Autocomplete
+        options={options}
+        value={data.name}
+        onChange={handleDropdownSelect}
+        disableClearable
+        renderInput={(params) => <TextField {...params} sx={{ width: 100 }} />}
+      />
     </Box>
   );
 };

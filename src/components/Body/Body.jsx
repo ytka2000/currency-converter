@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import useSWR from "swr";
 
 import { useStore } from "../../store";
-import { fetcher } from "../../utils/fetcher";
+import { fetcher } from "../../utils";
 
 import Container from "@mui/material/Container";
 import Loader from "../Loader";

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useStore } from "../../store";
+import { getCurrenciesData } from "../../store/selectors";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material/styles";
 
@@ -26,11 +27,12 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 const DataTable = () => {
-  const matches = useMediaQuery("(max-width:1100px)");
-
-  const data = useStore((state) => state.currencies);
+  const data = useStore(getCurrenciesData);
+  const setRateByName = useStore((state) => state.setRateByName);
 
   const [globalEditMode, setGlobalEditMode] = useState(false);
+
+  const matches = useMediaQuery("(max-width:1100px)");
 
   return (
     <Paper sx={{ width: matches ? "100%" : "75%", overflow: "hidden" }}>
@@ -44,9 +46,9 @@ const DataTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((item) => (
+            {data.map(({ ccy, base_ccy: baseCcy, buy, sale }) => (
               <TableRow
-                key={item.ccy}
+                key={ccy}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <StyledTableCell
@@ -54,16 +56,32 @@ const DataTable = () => {
                     backgroundColor: "primary.light",
                     color: "primary.dark",
                   }}
-                >{`${item.ccy}/${item.base_ccy}`}</StyledTableCell>
+                >{`${ccy}/${baseCcy}`}</StyledTableCell>
                 <DataTableInput
-                  defaultValue={item.buy}
+                  defaultValue={buy}
                   globalEditMode={globalEditMode}
                   setGlobalEditMode={setGlobalEditMode}
+                  setRate={(value) =>
+                    setRateByName({
+                      ccy,
+                      baseCcy,
+                      operation: "buy",
+                      amount: value,
+                    })
+                  }
                 />
                 <DataTableInput
-                  defaultValue={item.sale}
+                  defaultValue={sale}
                   globalEditMode={globalEditMode}
                   setGlobalEditMode={setGlobalEditMode}
+                  setRate={(value) =>
+                    setRateByName({
+                      ccy,
+                      baseCcy,
+                      operation: "sell",
+                      amount: 1 / value,
+                    })
+                  }
                 />
               </TableRow>
             ))}

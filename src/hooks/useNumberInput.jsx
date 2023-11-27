@@ -1,10 +1,12 @@
 import { useState } from "react";
 
+import { validateNumberInput } from "../utils";
+
 const useNumberInput = (defaultValue) => {
   const [value, setValue] = useState(defaultValue || "");
 
   const handleChange = (newValue) => {
-    if (newValue.match(`(^$)|(^[1-9]([0-9]*)(\\.?[0-9]{0,2})$)`)) {
+    if (validateNumberInput(newValue)) {
       setValue(newValue);
     }
   };
