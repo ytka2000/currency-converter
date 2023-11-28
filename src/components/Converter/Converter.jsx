@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { useStore } from "../../store";
-import {
-  getCurrenciesData,
-  getCurrenciesList,
-  getRatesbyBase,
-} from "../../store/selectors";
+import { getFirstConverterPair, getRatesbyBase } from "../../store/selectors";
 import { convert } from "../../utils";
 
 import { useTheme } from "@mui/material/styles";
@@ -17,27 +13,43 @@ import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import ConverterItem from "../ConverterItem";
 
 const Converter = () => {
-  const currenciesList = useStore(getCurrenciesList);
-  const currenciesData = useStore(getCurrenciesData);
-  const ratesByBase = useStore(getRatesbyBase);
-
   const [currentPair, setCurrentPair] = useState();
+
+  const initialPair = useStore(getFirstConverterPair);
+  const ratesByBase = useStore(getRatesbyBase);
 
   const theme = useTheme();
   const matchesSm = useMediaQuery(theme.breakpoints.down("sm"));
-  const matches = useMediaQuery("(max-width:1100px)");
+  const matchesWidth = useMediaQuery("(max-width:1100px)");
 
   useEffect(() => {
-    if (currenciesData.length > 0 && !currentPair) {
+    if (initialPair && !currentPair) {
       setCurrentPair([
-        { name: currenciesData[0].ccy, value: 100 },
+        { name: initialPair.ccy, value: 100 },
         {
-          name: currenciesData[0].base_ccy,
-          value: (currenciesData[0].buy * 100).toFixed(2),
+          name: initialPair.base_ccy,
+          value: (initialPair.buy * 100).toFixed(2),
         },
       ]);
     }
-  }, [currenciesData]);
+  }, [initialPair]);
+
+  useEffect(() => {
+    if (ratesByBase && currentPair) {
+      setCurrentPair((prevPair) => {
+        const newPair = [...prevPair];
+
+        newPair[1].value = convert({
+          ccy: newPair[0].name,
+          base_ccy: newPair[1].name,
+          amount: newPair[0].value,
+          rates: ratesByBase,
+        });
+
+        return newPair;
+      });
+    }
+  }, [ratesByBase]);
 
   if (!currentPair) return;
 
@@ -53,6 +65,7 @@ const Converter = () => {
         base_ccy: newPair[1].name,
         amount: newPair[id].value,
         rates: ratesByBase,
+        swapped: id === 1,
       });
 
       return newPair;
@@ -106,7 +119,7 @@ const Converter = () => {
         flexDirection: matchesSm ? "column" : "row",
         justifyContent: "space-evenly",
         alignContent: "center",
-        width: matches ? "100%" : "75%",
+        width: matchesWidth ? "100%" : "75%",
         gap: "5px",
       }}
     >
@@ -114,7 +127,6 @@ const Converter = () => {
         label="Change"
         id={0}
         data={currentPair[0]}
-        options={currenciesList}
         onInputChange={handleInput}
         onDropdownSelect={handleSelect}
       />
@@ -127,7 +139,6 @@ const Converter = () => {
         label="Get"
         id={1}
         data={currentPair[1]}
-        options={currenciesList}
         onInputChange={handleInput}
         onDropdownSelect={handleSelect}
       />

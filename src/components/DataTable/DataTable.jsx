@@ -58,7 +58,7 @@ const DataTable = () => {
                   }}
                 >{`${ccy}/${baseCcy}`}</StyledTableCell>
                 <DataTableInput
-                  defaultValue={buy}
+                  initialValue={buy}
                   globalEditMode={globalEditMode}
                   setGlobalEditMode={setGlobalEditMode}
                   setRate={(value) =>
@@ -71,7 +71,7 @@ const DataTable = () => {
                   }
                 />
                 <DataTableInput
-                  defaultValue={sale}
+                  initialValue={sale}
                   globalEditMode={globalEditMode}
                   setGlobalEditMode={setGlobalEditMode}
                   setRate={(value) =>

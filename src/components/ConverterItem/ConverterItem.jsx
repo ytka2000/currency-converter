@@ -1,3 +1,5 @@
+import { useStore } from "../../store";
+import { getCurrenciesList } from "../../store/selectors";
 import { validateNumberInput } from "../../utils";
 
 import Box from "@mui/material/Box";
@@ -8,10 +10,11 @@ const ConverterItem = ({
   label,
   id,
   data,
-  options,
   onInputChange,
   onDropdownSelect,
 }) => {
+  const currenciesList = useStore(getCurrenciesList);
+
   const handleInputChange = (e) => {
     const newValue = e.target.value;
 
@@ -49,7 +52,7 @@ const ConverterItem = ({
         onBlur={handleBlur}
       />
       <Autocomplete
-        options={options}
+        options={currenciesList}
         value={data.name}
         onChange={handleDropdownSelect}
         disableClearable

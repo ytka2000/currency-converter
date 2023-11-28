@@ -13,7 +13,7 @@ const ENDPOINT = "https://api.privatbank.ua/p24api/pubinfo";
 
 const Body = () => {
   const { data, error, isLoading } = useSWR(ENDPOINT, fetcher);
-  const setApiData = useStore((state) => state.setApiCurrencies);
+  const setApiData = useStore((state) => state.setCurrenciesData);
 
   useEffect(() => {
     if (data) {

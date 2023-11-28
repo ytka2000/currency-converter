@@ -1,34 +1,31 @@
 import { create } from "zustand";
 
 const useStore = create((set) => ({
-  apiCurrencies: [],
   currenciesData: [],
   currenciesList: [],
   ratesByBase: {},
-  setApiCurrencies: (data) =>
+  setCurrenciesData: (data) =>
     set((state) => {
-      if (state.currenciesData.length === 0) {
-        state.setCurrenciesData(data);
-        state.setRatesByBase();
-        state.setCurrenciesList();
-      }
-      return { apiCurrencies: data };
+      state.setRatesByBase(data);
+      state.setCurrenciesList();
+
+      return { currenciesData: data };
     }),
-  setCurrenciesData: (data) => set({ currenciesData: data }),
   setCurrenciesList: () =>
     set((state) => ({ currenciesList: Object.keys(state.ratesByBase).sort() })),
-  setRatesByBase: () =>
-    set((state) => {
+  setRatesByBase: (data) =>
+    set(() => {
       const ratesByBase = {};
-      state.currenciesData.forEach((item) => {
+
+      data.forEach((item) => {
         const ccy = ratesByBase[item.ccy];
         if (!ccy) {
           ratesByBase[item.ccy] = {};
         }
 
         ratesByBase[item.ccy] = {
-          ...ratesByBase[item.ccy],
-          [item.base_ccy]: item.buy,
+          ...ccy,
+          [item.base_ccy]: +item.buy,
         };
 
         const base_ccy = ratesByBase[item.base_ccy];
@@ -37,12 +34,11 @@ const useStore = create((set) => ({
         }
 
         ratesByBase[item.base_ccy] = {
-          ...ratesByBase[item.base_ccy],
+          ...base_ccy,
           [item.ccy]: 1 / item.sale,
         };
       });
 
-      console.log(ratesByBase, "ratesByBase");
       return { ratesByBase };
     }),
   setRateByName: ({ ccy: ccyName, baseCcy: baseCcyName, operation, amount }) =>

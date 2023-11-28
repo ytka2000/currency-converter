@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import useNumberInput from "../../hooks/useNumberInput";
 
 import TableCell from "@mui/material/TableCell";
@@ -10,14 +10,12 @@ import Input from "@mui/material/Input";
 import EditModeIcons from "./EditModeIcons";
 
 const DataTableCell = ({
-  defaultValue: defValue,
+  initialValue,
   globalEditMode,
   setGlobalEditMode,
   setRate,
 }) => {
-  const defaultValue = useMemo(() => Number(defValue).toFixed(2), [defValue]);
-
-  const cellValue = useRef(defaultValue);
+  const cellValue = useRef(Number(initialValue).toFixed(2));
   const [value, setValue, { onBlur }] = useNumberInput(cellValue.current);
 
   const [showEditIcon, setShowEditIcon] = useState(false);
@@ -33,7 +31,7 @@ const DataTableCell = ({
 
   const handleSaveClick = () => {
     cellValue.current = value;
-    setRate(value);
+    setRate(+value);
     setEditMode(false);
     setGlobalEditMode(false);
   };
@@ -47,10 +45,7 @@ const DataTableCell = ({
   const handleChange = (e) => {
     const newValue = +e.target.value;
 
-    if (
-      newValue > cellValue.current * 1.1 ||
-      newValue < cellValue.current * 0.9
-    ) {
+    if (newValue > initialValue * 1.1 || newValue < initialValue * 0.9) {
       setShowSaveIcon(false);
     } else {
       setShowSaveIcon(true);
@@ -72,23 +67,25 @@ const DataTableCell = ({
         onMouseEnter={() => setShowEditIcon(!editMode)}
         onMouseLeave={() => setShowEditIcon(false)}
       >
-        {editMode ? (
-          <Input
-            value={value}
-            onChange={handleChange}
-            onBlur={onBlur}
-            sx={{ width: "160px", fontSize: 18 }}
-            endAdornment={
-              <EditModeIcons
-                showSaveIcon={showSaveIcon}
-                onSave={handleSaveClick}
-                onCancel={handleCancelClick}
-              />
-            }
-          />
-        ) : (
-          cellValue.current
-        )}
+        <Tooltip title={initialValue}>
+          {editMode ? (
+            <Input
+              value={value}
+              onChange={handleChange}
+              onBlur={onBlur}
+              sx={{ width: "160px", fontSize: 18 }}
+              endAdornment={
+                <EditModeIcons
+                  showSaveIcon={showSaveIcon}
+                  onSave={handleSaveClick}
+                  onCancel={handleCancelClick}
+                />
+              }
+            />
+          ) : (
+            cellValue.current
+          )}
+        </Tooltip>
         {showEditIcon && !globalEditMode ? (
           <Tooltip title="Edit">
             <IconButton
