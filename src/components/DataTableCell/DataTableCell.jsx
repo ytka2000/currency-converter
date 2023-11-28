@@ -3,6 +3,7 @@ import useNumberInput from "../../hooks/useNumberInput";
 
 import TableCell from "@mui/material/TableCell";
 import Tooltip from "@mui/material/Tooltip";
+import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import EditIcon from "@mui/icons-material/Edit";
 import Input from "@mui/material/Input";
@@ -55,50 +56,48 @@ const DataTableCell = ({
   };
 
   return (
-    <>
-      <TableCell
-        align="right"
-        sx={{
-          fontSize: 18,
-          position: "relative",
-          pr: "24px",
-          height: "50px",
-        }}
-        onMouseEnter={() => setShowEditIcon(!editMode)}
-        onMouseLeave={() => setShowEditIcon(false)}
-      >
-        <Tooltip title={initialValue}>
-          {editMode ? (
-            <Input
-              value={value}
-              onChange={handleChange}
-              onBlur={onBlur}
-              sx={{ width: "160px", fontSize: 18 }}
-              endAdornment={
-                <EditModeIcons
-                  showSaveIcon={showSaveIcon}
-                  onSave={handleSaveClick}
-                  onCancel={handleCancelClick}
-                />
-              }
+    <TableCell
+      align="right"
+      sx={{
+        fontSize: 18,
+        position: "relative",
+        pr: "24px",
+        height: "50px",
+      }}
+      onMouseEnter={() => setShowEditIcon(!editMode)}
+      onMouseLeave={() => setShowEditIcon(false)}
+    >
+      {editMode ? (
+        <Input
+          value={value}
+          onChange={handleChange}
+          onBlur={onBlur}
+          sx={{ width: "160px", fontSize: 18 }}
+          endAdornment={
+            <EditModeIcons
+              showSaveIcon={showSaveIcon}
+              onSave={handleSaveClick}
+              onCancel={handleCancelClick}
             />
-          ) : (
-            cellValue.current
-          )}
+          }
+        />
+      ) : (
+        <Tooltip title={initialValue}>
+          <Typography sx={{ font: "inherit" }}>{cellValue.current}</Typography>
         </Tooltip>
-        {showEditIcon && !globalEditMode ? (
-          <Tooltip title="Edit">
-            <IconButton
-              color="primary"
-              sx={{ position: "absolute", top: 10, right: 0 }}
-              onClick={handleEditClick}
-            >
-              <EditIcon sx={{ height: "15px", width: "15px" }} />
-            </IconButton>
-          </Tooltip>
-        ) : null}
-      </TableCell>
-    </>
+      )}
+      {showEditIcon && !globalEditMode ? (
+        <Tooltip title="Edit">
+          <IconButton
+            color="primary"
+            sx={{ position: "absolute", top: 10, right: 0 }}
+            onClick={handleEditClick}
+          >
+            <EditIcon sx={{ height: "15px", width: "15px" }} />
+          </IconButton>
+        </Tooltip>
+      ) : null}
+    </TableCell>
   );
 };
 

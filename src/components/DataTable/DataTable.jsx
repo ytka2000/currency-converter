@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useStore } from "../../store";
 import { getCurrenciesData } from "../../store/selectors";
+import { useTheme } from "@mui/material/styles";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { styled } from "@mui/material/styles";
 
@@ -12,7 +13,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
-import DataTableInput from "../DataTableInput";
+import DataTableCell from "../DataTableCell";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,10 +33,11 @@ const DataTable = () => {
 
   const [globalEditMode, setGlobalEditMode] = useState(false);
 
-  const matches = useMediaQuery("(max-width:1100px)");
+  const theme = useTheme();
+  const matchesLg = useMediaQuery(theme.breakpoints.down("lg"));
 
   return (
-    <Paper sx={{ width: matches ? "100%" : "75%", overflow: "hidden" }}>
+    <Paper sx={{ width: matchesLg ? "100%" : "75%", overflow: "hidden" }}>
       <TableContainer sx={{ maxHeight: 390 }}>
         <Table stickyHeader aria-label="simple table">
           <TableHead>
@@ -57,7 +59,7 @@ const DataTable = () => {
                     color: "primary.dark",
                   }}
                 >{`${ccy}/${baseCcy}`}</StyledTableCell>
-                <DataTableInput
+                <DataTableCell
                   initialValue={buy}
                   globalEditMode={globalEditMode}
                   setGlobalEditMode={setGlobalEditMode}
@@ -70,7 +72,7 @@ const DataTable = () => {
                     })
                   }
                 />
-                <DataTableInput
+                <DataTableCell
                   initialValue={sale}
                   globalEditMode={globalEditMode}
                   setGlobalEditMode={setGlobalEditMode}

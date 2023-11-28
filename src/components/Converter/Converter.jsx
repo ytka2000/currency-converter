@@ -20,7 +20,7 @@ const Converter = () => {
 
   const theme = useTheme();
   const matchesSm = useMediaQuery(theme.breakpoints.down("sm"));
-  const matchesWidth = useMediaQuery("(max-width:1100px)");
+  const matchesLg = useMediaQuery(theme.breakpoints.down("lg"));
 
   useEffect(() => {
     if (initialPair && !currentPair) {
@@ -119,7 +119,7 @@ const Converter = () => {
         flexDirection: matchesSm ? "column" : "row",
         justifyContent: "space-evenly",
         alignContent: "center",
-        width: matchesWidth ? "100%" : "75%",
+        width: matchesLg ? "100%" : "75%",
         gap: "5px",
       }}
     >
