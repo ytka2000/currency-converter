@@ -12,10 +12,14 @@ const findRate = (ccyName, baseCcyName, rates) => {
       }
     }
   }
+
+  return 0;
 };
 
 const convert = ({ ccy, base_ccy, amount, rates, swapped = false }) => {
   const rate = findRate(ccy, base_ccy, rates);
+
+  if (!rate) return 0;
 
   const result = !swapped ? rate * amount : amount / rate;
 
