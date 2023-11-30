@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useNumberInput from "../../hooks/useNumberInput";
 
 import TableCell from "@mui/material/TableCell";
@@ -23,6 +23,18 @@ const DataTableCell = ({
   const [showSaveIcon, setShowSaveIcon] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
+  useEffect(() => {
+    if (
+      isNaN(value) ||
+      value > initialValue * 1.1 ||
+      value < initialValue * 0.9
+    ) {
+      setShowSaveIcon(false);
+    } else {
+      setShowSaveIcon(true);
+    }
+  }, [initialValue, value]);
+
   const handleEditClick = () => {
     setEditMode(true);
     setGlobalEditMode(true);
@@ -43,22 +55,6 @@ const DataTableCell = ({
     setGlobalEditMode(false);
   };
 
-  const handleChange = (e) => {
-    const newValue = +e.target.value;
-
-    if (
-      isNaN(newValue) ||
-      newValue > initialValue * 1.1 ||
-      newValue < initialValue * 0.9
-    ) {
-      setShowSaveIcon(false);
-    } else {
-      setShowSaveIcon(true);
-    }
-
-    setValue(e.target.value);
-  };
-
   return (
     <TableCell
       align="right"
@@ -74,7 +70,7 @@ const DataTableCell = ({
       {editMode ? (
         <Input
           value={value}
-          onChange={handleChange}
+          onChange={(e) => setValue(e.target.value)}
           onBlur={onBlur}
           sx={{ width: "160px", fontSize: 18 }}
           endAdornment={
