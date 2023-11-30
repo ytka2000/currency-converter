@@ -46,7 +46,11 @@ const DataTableCell = ({
   const handleChange = (e) => {
     const newValue = +e.target.value;
 
-    if (newValue > initialValue * 1.1 || newValue < initialValue * 0.9) {
+    if (
+      isNaN(newValue) ||
+      newValue > initialValue * 1.1 ||
+      newValue < initialValue * 0.9
+    ) {
       setShowSaveIcon(false);
     } else {
       setShowSaveIcon(true);
