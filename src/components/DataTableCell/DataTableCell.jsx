@@ -16,8 +16,10 @@ const DataTableCell = ({
   setGlobalEditMode,
   setRate,
 }) => {
-  const cellValue = useRef(Number(initialValue).toFixed(2));
-  const [value, setValue, { onBlur }] = useNumberInput(cellValue.current);
+  const cellValue = useRef(initialValue);
+  const [value, setValue, { onBlur }] = useNumberInput(
+    Number(cellValue.current).toFixed(2)
+  );
 
   const [showEditIcon, setShowEditIcon] = useState(false);
   const [showSaveIcon, setShowSaveIcon] = useState(false);
@@ -82,8 +84,10 @@ const DataTableCell = ({
           }
         />
       ) : (
-        <Tooltip title={initialValue}>
-          <Typography sx={{ font: "inherit" }}>{cellValue.current}</Typography>
+        <Tooltip title={cellValue.current}>
+          <Typography sx={{ font: "inherit" }}>
+            {Number(cellValue.current).toFixed(2)}
+          </Typography>
         </Tooltip>
       )}
       {showEditIcon && !globalEditMode ? (
